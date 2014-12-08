@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel ="stylesheet" type = "text/css" href="main.css">
+    <link rel = "icon"
+            type = "image/gif"
+            href = "assets/eggy.gif">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="jquery-1.11.1.js"></script>
+<script>
+images = ['images/a.jpg','images/b.jpg','images/c.jpg','images/d.jpg','images/e.jpg','images/f.jpg','images/g.jpg','images/h.jpg','images/i.jpg','images/j.png','images/k.png','images/l.png','images/m.png','images/n.png','images/o.png','images/p.png','images/q.png','images/r.png','images/s.png','images/t.png','images/u.png','images/v.png','images/w.png','images/x.png','images/y.png','images/z.png','images/aa.png','images/ab.png','images/ac.png','images/ad.jpg','images/ae.jpg','images/af.jpg','images/ag.jpg','images/ah.jpg','images/ai.jpg','images/aj.jpg'];
+
+
+
+descriptions = ['watercolor  "13in x 20in"','watercolor  "20in x 13in"','watercolor  "13in x 20in"','watercolor  "20in x 13in"','White Charcoal on Black Paper "24in x 18in"', 'Graphite  "18in  x 18in"', 'watercolor  "20in x 13in"', 'watercolor  "13in x 20in"', 'Digital:Photoshop  "1280px x 1024px"', 'Digital:Photoshop "2000px x 2000px"', 'Digital:Photoshop  "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"',,'Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"','Digital:Photoshop "2000px x 2000px"',' Colored Pencil "20in x 16in"', 'White Charcoal on Black Paper "20in x 16in"','Collage:Magazine "18in x 12in"','watercolor "13in x 20in"','White Charcoal on Black paper "24in x 18in"','watercolor "13in x 20in"'];
+
+
+
+
+
+$(document).ready(function(){
+    $('#imageHolder').css('width', images.length * 18);
+    $.each(images, function(index, value) {
+            $('#imageHolder').append('<img src="' + value + '" />');
+    });
+     beginNow= setInterval(forwardImage, 4000);
+                  
+    $('.thumbnailArrows').hover(function() {
+        var whiches = $(this).children('img').attr('id');
+        if (whiches == 'Tleft') {
+            movingThumbs(2000, '+');
+            }
+        else {
+            movingThumbs(2000, '-');
+        }
+    }, function() {
+        $('#imageHolder').stop();
+    });
+    function movingThumbs(speed, direction) {
+        var currentLeft = $('#imageHolder').position().left;
+        var moving = $('#imageHolder').width() - (Math.abs($('#imageHolder').position().left) + $('#window').width());
+        if (currentLeft == 0 && direction == '+') {
+            } else if (Math.abs($('#imageHolder').position().left) + $('#window').width() >= $('#imageHolder').width() && direction == '-') {
+            } else if (direction == '+' && currentLeft != 0) {
+                $('#imageHolder').animate({
+                        left: 0,
+                }, speed);
+            } else {
+                  $('#imageHolder').animate({
+                         left: '+='+direction + moving,
+                    }, speed);
+                  }
+            }
+    $('#imageHolder img').click(function() {
+        var newImage = $(this).attr('src');
+        $.each(images, function(index, value) {
+            if (value == newImage) {
+                    changeImage(index);
+                    descriptionChange(index);
+             }
+        });
+    
+    });
+    $('#holder').hover(function() {
+        $('#description, #descriptionBack').animate({
+          bottom: -40,
+        }, {
+            duration: 400,
+            queue: false
+        });
+    }, function() {
+        $('#description, #descriptionBack').animate({
+            bottom: -40,
+        }, {
+            duration: 400,
+            queue: false
+        });
+    });
+
+       function descriptionChange(newDescript) {
+            $('#description').stop().animate({
+            opacity: 0,
+            }, 200, function() {
+            $('#description').html(descriptions[newDescript]);
+            $('#description').animate({
+                opacity: 1,
+           }, 200)
+        })
+    }
+
+                  
+           
+            
+            $('#rightArrow').click(function(){
+            clearInterval(beginNow);
+            forwardImage();
+                             });
+            
+            $('#leftArrow').click(function(){
+            clearInterval(beginNow);
+            backwardsImage();
+            });
+            
+            $('#leftArrowD, #rightArrowD').hover(function() {
+                $(this).stop().animate({
+                    opacity: 1,
+                })
+            }, function() {
+                 $(this).stop().animate({
+                        opacity: 0,
+                  })
+           })
+            function currentImageKey(){
+               i = jQuery.inArray($('#slideshow').attr('src'),images);
+               return i;
+            }
+            function backwardsImage(){
+                currentImageKey();
+                if (i == 0){
+                    changeImage(images.length -1);
+
+                }else{
+                    changeImage(i -1);
+                }
+                checkArrows(i - 1);
+                descriptionChange(i -1);
+            }
+            
+            
+            function forwardImage(){
+                currentImageKey();
+                if (i < images.length - 1) {
+                    changeImage(i + 1);
+                    descriptionChange(i +1);
+                }else{
+                    changeImage(0);
+                }
+                checkArrows(i+1);
+            }
+        
+        function checkArrows(i) {
+            if (i == 0) {
+                $('#leftArrow').css('display', 'none');
+                $('#rightArrow').css('display', 'inline');
+            } else if (i == images.length - 1) {
+                $('#rightArrow').css('display', 'none');
+                $('#leftArrow').css('display', 'inline');
+            } else {
+                $('#rightArrow').css('display', 'inline');
+                $('#leftArrow').css('display', 'inline');
+            }            
+        }
+                  
+                              
+        
+        function changeImage(i) {
+            $('#slideshow').stop().animate({
+            opacity: 0,
+            }, 200, function() {
+            $('#slideshow').attr('src', images[i]);
+            $('#holder img').load(function(){
+            $('#slideshow').stop().animate({
+            opacity: 1,
+            }, 200)
+            })
+            })
+        }
+        });
+       
+        </script>
+    <style>
+        body {background:#28232d; width: 540px; text-align: center;}
+        #slideshow { max-height:540px; max-width:648px; }
+        #holder { height:747px; width:648px; position:absolute;center; background-color:#333; left:18%;}
+        #leftArrowD { position:absolute; right:100%; top:0px; height:inherit; width:50px; z-index:9; opacity:0;}
+        #rightArrowD { position:absolute; left:100%; top:0px; height:inherit; width:50px; z-index:9; opacity:0;}
+        #leftArrow{ width:50px; height:50px;right:0px; top:41%; position:absolute;}
+        #rightArrow { width:50px; height:50px; left:0px;top:41%; position:absolute;}
+        #leftArrow:hover, #rightArrow:hover {cursor:pointer; }
+        #descriptionBack { width:207px; height:54px; background-color:#000000; opacity:.27; position:absolute; z-index:7; bottom:40px; right:0px;filter:alpha(opacity=
+            90); }
+        #description { width:99px; padding:10px; position:absolute; z-index: 8; color:#fff; font-family:"Trebuchet MS", Helvetica,sans-serif;font-size: 12px; bottom:2px; right:45px; height:30px;}
+        
+        
+        
+        #thumbnails { width:300px; height:50px; margin-top:20px;}
+        #window { width:250px; height:50px; overflow:hidden; float:left; position:relative;}
+        #imageHolder { height:45px; position:absolute; top:585px; left:0px;}
+        #imageHolder img { width:45px; height:50px; float:center; margin-right:3px;}
+        #imageHolder img:hover {opacity: 0.4;filter: alpha(opacity=40);}
+        
+        #thumbnails .thumbnailArrows { width:25px; height:50px; float:left; }
+        #thumbnails .thumbnailArrows:hover {cursor:pointer; }
+        
+        
+        #menu{width:100px; height:45px; margin:0px; padding-top:45px; }
+        #menu ul{width:100px; height:45px; margin:0px; padding:0px; }
+        #menu ul button {
+            width:200px;
+            height:24px;
+            background-color:#28232d;
+            color:#ffffff;
+            font-family:"Trebuchet MS", Helvetica, sans-serif;
+            font-size: 12px;
+            border:0px;
+            text-align:left;
+            transition: all 0.5s ease 0s;
+            -webkit-animation: slidein 2s;
+            -webkit-animation-duration: 2s;
+            -webkit-transition-timing-function: ease;}
+    #menu ul button:hover {
+        color: #ff605c;
+      }
+    
+    </style>
+    </head>
+    <body>
+        <a href = "index.html">
+            <button id ="title2"></button>
+        </a>
+
+        <div id = "bar">
+            <img src = "assets/top_line.gif"/>
+        </div>
+      
+        
+    
+        <div id ="menu">
+            
+            <ul>
+                
+                <a href ="about.html">
+                <button name="create"> About Aubergine </button>
+                </a>
+                <a href ="howto.html">
+                    <button name="howto"> How-To's</button>
+                </a>
+                <a href ="creations.html">
+                    <button name="about"> Artwork </button>
+                </a>
+                <a href ="about.html">
+                    <button name="about"> Projects </button>
+                </a>
+            </ul>
+        </div>
+        <div id ="quote1">
+            </div>
+        <div id ="description"></div>
+        <div id ="descriptionBack"></div>
+        <Div id="holder">
+            <div id="leftArrowD"><img src='assets/backButton.gif' id='leftArrow' />
+            </div>
+            <div id="rightArrowD"><img src='assets/nextButton.gif' id='rightArrow' />
+            </div>
+            
+            <img src="images/a.jpg" id="slideshow" />
+            
+            <div id="imageHolder"></div>
+            <div id ="imageHolder img"></div>
+        </Div>
+       
+        
+    </body>
+    
+    
+</html>
